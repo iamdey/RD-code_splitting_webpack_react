@@ -11,7 +11,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].[chunkhash].js',
     publicPath: '/',
   },
   module: {
@@ -31,8 +31,7 @@ module.exports = {
       template: path.resolve(sourcePath, 'index.ejs'),
     }),
     new CommonsChunkPlugin({
-      name: 'vendor',
-      filename: 'vendor.bundle.js',
+      names: ['vendor', 'manifest'],
     }),
   ],
 };
