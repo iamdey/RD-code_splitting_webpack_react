@@ -3,8 +3,9 @@
     "start": "webpack-dev-server",
     "release": "webpack",
     "explore": "npm-run-all release explore:main explore:vendor",
-    "explore:main": "source-map-explorer dist/bundle.js",
-    "explore:vendor": "source-map-explorer dist/vendor.bundle.js"
+    "explore:main": "source-map-explorer dist/app.*.js",
+    "explore:vendor": "source-map-explorer dist/vendor.*.js",
+    "explore:async": "source-map-explorer dist/1.*.js"
   },
   "dependencies": {
     "jquery": "^3.2.1",
