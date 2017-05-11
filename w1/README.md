@@ -11,7 +11,7 @@ Branches:
 * `0-the-app`
 * `1-split_vendor`
 * `2-split_vendor-2`
-* `3-async_load`
+* `3-async_load` or `master`
 
 Run the code:
 
