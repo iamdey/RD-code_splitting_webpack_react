@@ -6,7 +6,7 @@ twitter: @iamdey
 mastodon: @dey@mastodon.xyz
 job: ethical frontend dev @Gandi
 
-# Plein de nouveautés
+# Plein de nouveautés pour moi
 
 react, avant angularjs 1
 travail en remote
@@ -23,13 +23,13 @@ En pire.
 
 # Bref, code splitting
 
-## Pourquoi:
+## C'est quoi ? Pourquoi ?
 
 La taille du bundle.
 
 An 2000 : images / swf
 
-(Avant on se souciaait de la taille des images, swf etc., mais les bouts de js et de css, osef ... an 2000 hein)
+(Avant on se souciait de la taille des images, swf etc., mais les bouts de js et de css, osef ... an 2000, hein)
 
 Un peu après : les vendors, jQuery & ses potes
 
@@ -85,7 +85,8 @@ Utilisation de webpack1, kotatsu, ES6
 2 actions:
 
 * séparer les vendors (pas tous) #easyWin
-(C'est ce que l'on a commencé à faire en 2000) (si on s'arrête là c'est bien mais la taille du bundle reste la même)
+  (C'est ce que l'on a commencé à faire en 2000) (si on s'arrête là c'est bien mais la taille des
+  bundles cummulés reste la même)
 * Charger en asynchrone les différentes partie de l'app
 
 > [TL;DR] https://hackernoon.com/straightforward-code-splitting-with-react-and-webpack-4b94c28f6c3f#.h5oo6ycrn
