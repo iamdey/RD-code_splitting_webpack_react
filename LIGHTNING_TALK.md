@@ -101,36 +101,70 @@ Cette étape est requise pour la suite.
 
 Spécifier les vendors à concaténer:
 
+```js
+{
+  entry: {
+    app: [/****/],
+    vendor: [
+      '@gandi/react-translate',
+      'axios',
+      'foundation-sites',
+      'jquery',
+      'lodash.throttle',
+      'react',
+      'react-dom',
+      'redux',
+      // ...
+    ],
+  },
+  /****/
+  plugins: [
+    /****/,
+    new CommonsChunkPlugin({
+      name: 'vendor',
+      filename: 'vendor.bundle.js',
+    }),
+  ],
+}
 ```
-[
-  '@gandi/react-translate',
-  'axios',
-  'foundation-sites',
-  'jquery',
-  'lodash.throttle',
-  'react',
-  'react-dom',
-  'redux',
-  // ...
-]
+
+## Mais si je change mes vendors ?
+
+* Il faut avoir les hash dans les fichiers générés
+* Configurer le "Manifest"
+
+```js
+{
+  /****/
+  output: {
+    filename: '[name].[chunkhash].js',
+  },
+  /****/
+  plugins: [
+    /****/,
+    new CommonsChunkPlugin({
+      names: ['vendor', 'manifest'],
+    }),
+  ],
+}
 ```
 
 À voir : https://webpack.js.org/guides/code-splitting-libraries/
-Attention de bien aller au bout du document avec le manifest qui permet la mise en cache de vendor.
 
 # Un wrapper qui charge les chunks en asynchrone
 
-Ça se complique un peu là.
+Ça se complique un peu là (... mais juste un peu).
 
 ## Webpack1
 
-Avant (entre autre) : `require.ensure`
+**Avant** (entre autres) : `require.ensure`
 Un callback s'assurait que le module est chargé.
 
 FIXME: comment se passe le découpage ?
 
-(En regardant le component <AsynLoader> de calypso je tombé sur leur plugin babel qui transpile les require, arbnb a fait le sien aussi)
-Maintenant : le plugin babel Dynamic Import http://babeljs.io/docs/plugins/syntax-dynamic-import/
+**Entre temps** : le component `<AsynLoader>` de Wordpress Calypso et leur plugin babel qui transpile les `require`.
+
+**Maintenant** : le plugin babel/webpack de Airbnb `Dynamic Import` http://babeljs.io/docs/plugins/syntax-dynamic-import/
 
 ```
 import('./module')
@@ -139,9 +173,14 @@ import('./module')
   });
 ```
 
+_Note: L'implem de Airbnb n'est plus utile avec webpack 2_
+
 ## Webpack2
 
-Simplification: `import()` est géré par webpack est sort une promesse.
+Simplification: `import()` est gérée par webpack.
+Le plugin n'est plus utile.
+
+_That's all folks_
 
 # Demo React
 
@@ -153,6 +192,21 @@ Application avec un bouton de login qui affiche un form et la complexité du mdp
 2. séparation des vendors
 3. async loader
 
+# Waou génial
+
+Mais par contre comment ça se passe avec SSR ou electron/cordova ?
+
+Avec `componentWillMount` ?!
+
+_Les effets de bord dans `componentWillMount` etc. sont un anti-pattern!_
+
+## Alors ?
+
+Je n'ai pas la réponse, mais :
+
+* A-t-on réellement besoin de générer le rendu des contenus asynchrone ?
+* Peut être même que ça optimise l'utilisation de la mémoire d'une app "native"
+
 # Références
 
 * Le composant `AsyncLoad` de calypso https://github.com/Automattic/wp-calypso/tree/master/client/components/async-load
@@ -161,6 +215,7 @@ Application avec un bouton de login qui affiche un form et la complexité du mdp
 * Tutorial React (webpack2) https://hackernoon.com/straightforward-code-splitting-with-react-and-webpack-4b94c28f6c3f#.h5oo6ycrn
 * Le composant `Async` utilisé https://github.com/didierfranc/react-code-splitting
 * react conf 2017 - code splitting https://www.youtube.com/watch?v=bb6RCrDaxhw&list=PLb0IAmt7-GS3fZ46IGFirdqKTIxlws7e0&index=25
+* May be deprecation of componentWillMount https://github.com/facebook/react/issues/7671
 
 # The End
 
