@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom'
 import Home from './Home';
 import About from './About';
-import Signup from './Signup';
+import AsyncSignup from './AsyncSignup';
 
 const App = ({}) => {
   return (
@@ -22,7 +22,7 @@ const App = ({}) => {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/about" component={About} />
-          <Route path="/signup" component={Signup} />
+          <Route path="/signup" component={AsyncSignup} />
         </Switch>
       </div>
     </Router>
