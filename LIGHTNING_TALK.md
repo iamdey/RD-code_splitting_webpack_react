@@ -209,6 +209,8 @@ Je n'ai pas la réponse, mais :
 
 # Références
 
+* Les slides : <TODO>
+* La demo https://github.com/iamdey/RD-code_splitting_webpack_react
 * Le composant `AsyncLoad` de calypso https://github.com/Automattic/wp-calypso/tree/master/client/components/async-load
 * Code splitting dans webpack1 http://webpack.github.io/docs/code-splitting.html
 * Code splitting dans webpack2 https://webpack.js.org/guides/code-splitting-libraries/
