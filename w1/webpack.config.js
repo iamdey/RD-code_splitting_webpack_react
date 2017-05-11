@@ -1,10 +1,14 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CommonsChunkPlugin } = require('webpack').optimize;
 
 const sourcePath = path.resolve(__dirname, './src');
 module.exports = {
   devtool: 'source-map',
-  entry: path.resolve(sourcePath, 'index'),
+  entry: {
+    app: path.resolve(sourcePath, 'index'),
+    vendor: ['react', 'react-dom', 'react-router-dom', 'jquery'],
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -22,7 +26,13 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx'],
   },
-  plugins: [new HtmlWebpackPlugin({
-    template: path.resolve(sourcePath, 'index.ejs'),
-  })],
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(sourcePath, 'index.ejs'),
+    }),
+    new CommonsChunkPlugin({
+      name: 'vendor',
+      filename: 'vendor.bundle.js',
+    }),
+  ],
 };

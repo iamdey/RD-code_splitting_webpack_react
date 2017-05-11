@@ -2,8 +2,9 @@
   "scripts": {
     "start": "webpack-dev-server",
     "release": "webpack",
-    "explore": "npm-run-all release explore:start",
-    "explore:start": "source-map-explorer dist/bundle.js"
+    "explore": "npm-run-all release explore:main explore:vendor",
+    "explore:main": "source-map-explorer dist/bundle.js",
+    "explore:vendor": "source-map-explorer dist/vendor.bundle.js"
   },
   "dependencies": {
     "jquery": "^3.2.1",
