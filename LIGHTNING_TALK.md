@@ -6,7 +6,7 @@ twitter: @iamdey
 mastodon: @dey@mastodon.xyz
 job: ethical frontend dev @Gandi
 
-# Plein de nouveautés pour moi
+**Plein de nouveautés pour moi**
 
 react, avant angularjs 1
 travail en remote
@@ -41,7 +41,7 @@ Un peu après : les vendors, jQuery & ses potes
 
 # Contexte (outils de build)
 
-Utilisation de webpack1, kotatsu, ES6
+Utilisation de webpack1, babel, kotatsu, ES6
 
 (On aurait pu utiliser gush, gulp, ou webpack2 (ou même un makefile quand on et un peu nerd)
 (mais là webpack1, par ce que c'est ce qu'on avait quand j'ai démarré la refonte react et que j'ai du kotatsu pour le gérer)
@@ -66,20 +66,20 @@ Utilisation de webpack1, kotatsu, ES6
 # Proposition de découpage
 
 ```
-/(anon) }- bundle.js < async < ----- home.js
-/signin }     !------------------------------------------------------ vendors.js
+/(anon|authenticated) }- app.js
+/signin }                  !------------------------------------------ vendors.js
                                                         !                 +- jQuery
-/signup }- bundle.js < async < ----- signup.js          !                 +- foundation
-              !                       +- zxcvbn.js      !                 +- moment
+/signup }- app.js < dyn import < ----- signup.js        !                 +- foundation
+              !                         +- zxcvbn.js    !                 +- moment
               !------------------------------------------                 +- ...
                                                         !
-/ (authenticated) }- bundle.js < async < --main.js      !
-                      !----------------------------------
-                                                        !
-/compose }- bundle.js < async < -----------main.js      !
-                !----------------------------------------
-                                        (chiffrement?) <- async load <- openpgp.js
-                                                                            !< web worker < (process)
+/compose }- app.js                                      !
+              !------------------------------------------
+              !
+              !------ [chiffrement ?] < dyn import < openpgp.js
+                                             !          !----< web worker < (process)
+/(contact|profile) }- app.js                 !
+                        |------ [clés PGP ?]--
 ```
 
 2 actions:
@@ -130,7 +130,10 @@ Spécifier les vendors à concaténer:
 
 ## Mais si je change mes vendors ?
 
+L'enfer du cache navigateur.
+
 * Il faut avoir les hash dans les fichiers générés
+  -> utiliser `HtmlWebpackPlugin`
 * Configurer le "Manifest"
 
 ```js
@@ -153,7 +156,7 @@ Spécifier les vendors à concaténer:
 
 # Un wrapper qui charge les chunks en asynchrone
 
-Ça se complique un peu là (... mais juste un peu).
+Ça se complique un peu là (... mais alors juste un peu).
 
 ## Webpack1
 
@@ -173,12 +176,19 @@ import('./module')
   });
 ```
 
-_Note: L'implem de Airbnb n'est plus utile avec webpack 2_
+Nécessite l'installation de `babel-plugin-dynamic-import-webpack` et son activation dans `.babelrc`:
+
+```json
+{
+  "...": "...",
+  "plugins": ["...", "dynamic-import-webpack"]
+}
+```
 
 ## Webpack2
 
 Simplification: `import()` est gérée par webpack.
-Le plugin n'est plus utile.
+Le plugin `dynamic-import-webpack` n'est plus utile, la syntaxe est identique.
 
 _That's all folks_
 
@@ -192,13 +202,44 @@ Application avec un bouton de login qui affiche un form et la complexité du mdp
 2. séparation des vendors
 3. async loader
 
-# Waou génial
+# Démo Caliopen
 
-Mais par contre comment ça se passe avec SSR ou electron/cordova ?
+* source-map de la release, taille des chunks
+* chunk SSR inutile (mais présent pour la consistence)
+* La prise en charge des modules css
+
+* app.js : / • 257 kB • 100.0%
+* vendor.js : / • 1.62 MB • 100.0% (foundation, jquery, moment, ..., react & co)
+* 1.js (pgp-manager): openpgp • 331 kB • 99.4%
+* 2.js (Signup): zxcvbn • 819 kB • 93.6%
+
+# Troubleshouting
+
+**Compat HMR** : cf. https://github.com/gaearon/react-hot-loader/blob/master/docs/Known%20Limitations.md
+
+**Librairies dynamiques communes:** Risque de duplication dans les chunks.
+Il faut faire en sorte que le point d'entrée soit le même partout.
+
+**Temps de build** : cf. https://github.com/webpack/webpack/issues/4636
+Je n'ai pas personnellement remarqué.
+
+# Waou génial !
+
+Mais par contre comment ça se passe avec **SSR** ou electron/cordova ?
 
 Avec `componentWillMount` ?!
 
+Nopenonononono
+
 _Les effets de bord dans `componentWillMount` etc. sont un anti-pattern!_
+
+Il y a bien des libs React qui propose le chargement asynchrone:
+
+* `Async` de didierfranc : `componentWillMount` + `forceUpdate` :(
+* `ReactLoader` de CognizantStudio : `componentDidMount` + es5 + useless DOM requierements
+* `AsyncLoad` dans calypso : `componentWillMount` (╯°□°）╯︵ ┻━┻
+* `ReactLoadable` de thejameskyle : `componentWillMount` ┻━┻︵ \(°□°)/ ︵ ┻━┻
+    + plugin babel 	┬──┬﻿ ノ( ゜-゜ノ)
 
 ## Alors ?
 
@@ -206,16 +247,19 @@ Je n'ai pas la réponse, mais :
 
 * A-t-on réellement besoin de générer le rendu des contenus asynchrone ?
 * Peut être même que ça optimise l'utilisation de la mémoire d'une app "native"
+* `ReactLoadable` semble être la solution la plus complexe mais la plus proche pour SSR (si c'est nécessaire).
 
 # Références
 
 * Les slides : <TODO>
 * La demo https://github.com/iamdey/RD-code_splitting_webpack_react
-* Le composant `AsyncLoad` de calypso https://github.com/Automattic/wp-calypso/tree/master/client/components/async-load
 * Code splitting dans webpack1 http://webpack.github.io/docs/code-splitting.html
 * Code splitting dans webpack2 https://webpack.js.org/guides/code-splitting-libraries/
 * Tutorial React (webpack2) https://hackernoon.com/straightforward-code-splitting-with-react-and-webpack-4b94c28f6c3f#.h5oo6ycrn
 * Le composant `Async` utilisé https://github.com/didierfranc/react-code-splitting
+* Le composant `AsyncLoad` de calypso https://github.com/Automattic/wp-calypso/tree/master/client/components/async-load
+* Le composant `ReactLoadable` https://github.com/thejameskyle/react-loadable
+* Le composant `ReactLoader` https://github.com/CognizantStudio/react-loader
 * react conf 2017 - code splitting https://www.youtube.com/watch?v=bb6RCrDaxhw&list=PLb0IAmt7-GS3fZ46IGFirdqKTIxlws7e0&index=25
 * May be deprecation of componentWillMount https://github.com/facebook/react/issues/7671
 
