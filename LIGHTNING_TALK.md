@@ -249,6 +249,8 @@ Je n'ai pas la réponse, mais :
 * Peut être même que ça optimise l'utilisation de la mémoire d'une app "native"
 * `ReactLoadable` semble être la solution la plus complexe mais la plus proche pour SSR (si c'est nécessaire).
 
+**Update** 15/09/2017 next.js 3.0 va proposer de l'import de composants dynamiques via HoC
+
 # Références
 
 * Les slides : <TODO>
@@ -260,6 +262,7 @@ Je n'ai pas la réponse, mais :
 * Le composant `AsyncLoad` de calypso https://github.com/Automattic/wp-calypso/tree/master/client/components/async-load
 * Le composant `ReactLoadable` https://github.com/thejameskyle/react-loadable
 * Le composant `ReactLoader` https://github.com/CognizantStudio/react-loader
+* Le HoC de Zeit/next.js https://zeit.co/blog/next3-preview#dynamic-imports
 * react conf 2017 - code splitting https://www.youtube.com/watch?v=bb6RCrDaxhw&list=PLb0IAmt7-GS3fZ46IGFirdqKTIxlws7e0&index=25
 * May be deprecation of componentWillMount https://github.com/facebook/react/issues/7671
 
