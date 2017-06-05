@@ -1,5 +1,11 @@
 # Code splitting d'une SPA 2016/2017
 
+---
+
+**Slides à jours :** https://frama.link/code-splitting-react-2017
+
+---
+
 Présentation:
 
 twitter: @iamdey
@@ -43,7 +49,7 @@ Un peu après : les vendors, jQuery & ses potes
 
 Utilisation de webpack1, babel, kotatsu, ES6
 
-(On aurait pu utiliser gush, gulp, ou webpack2 (ou même un makefile quand on et un peu nerd)
+(On aurait pu utiliser gush, gulp, ou webpack2 (ou même un makefile quand on est un peu nerd)
 (mais là webpack1, par ce que c'est ce qu'on avait quand j'ai démarré la refonte react et que j'ai du kotatsu pour le gérer)
 (Webpack c'est chouette, un peu tordu mais chouette)
 (coup de bol webpack c'est du code splitting à la base : "les chunks")
@@ -93,11 +99,9 @@ Utilisation de webpack1, babel, kotatsu, ES6
 
 # Split vendors
 
-Gestion des modules js à la ES6 avec Webpack 1 ou 2.
+Gestion des modules js à la ES6 avec Webpack 1 ou 2: `import <name> from '<name>'`
 
-Le code splitting est rendu possible grâce à `webpack.optimize.CommonsChunkPlugin`.
-
-Cette étape est requise pour la suite.
+Le code split est rendu possible grâce à `webpack.optimize.CommonsChunkPlugin`.
 
 Spécifier les vendors à concaténer:
 
@@ -205,7 +209,7 @@ Application avec un bouton de login qui affiche un form et la complexité du mdp
 # Démo Caliopen
 
 * source-map de la release, taille des chunks
-* chunk SSR inutile (mais présent pour la consistence)
+* chunk SSR inutile (mais présent pour la consistance)
 * La prise en charge des modules css
 
 * app.js : / • 257 kB • 100.0%
@@ -253,7 +257,6 @@ Je n'ai pas la réponse, mais :
 
 # Références
 
-* Les slides : <TODO>
 * La demo https://github.com/iamdey/RD-code_splitting_webpack_react
 * Code splitting dans webpack1 http://webpack.github.io/docs/code-splitting.html
 * Code splitting dans webpack2 https://webpack.js.org/guides/code-splitting-libraries/
@@ -270,4 +273,9 @@ Je n'ai pas la réponse, mais :
 
 photo de chat
 tw @iamdey
-prez: frama.link
+slides: https://frama.link/code-splitting-react-2017
+
+## Next poll
+
+* BEM
+* tests fonctionels avec protractor
